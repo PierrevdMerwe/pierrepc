@@ -14,7 +14,6 @@
       min-height: 100vh;
     }
 
-    /* ── Login overlay ── */
     #login-screen {
       position: fixed; inset: 0;
       background: #0f0f13;
@@ -58,16 +57,12 @@
       font-weight: 700;
       cursor: pointer;
     }
+    .login-card button:disabled { opacity: 0.5; cursor: not-allowed; }
     .login-card .error { color: #ef4444; font-size: 13px; margin-top: 10px; min-height: 18px; }
 
-    /* ── Main layout ── */
-    #app {
-      display: flex;
-      min-height: 100vh;
-    }
+    #app { display: flex; min-height: 100vh; }
     #app.hidden { display: none; }
 
-    /* ── Left sidebar — logs ── */
     .sidebar {
       width: 300px;
       background: #12121a;
@@ -76,7 +71,6 @@
       overflow-y: auto;
       flex-shrink: 0;
     }
-
     .sidebar h3 {
       font-size: 12px;
       text-transform: uppercase;
@@ -84,7 +78,6 @@
       color: #444;
       margin-bottom: 16px;
     }
-
     .log-entry {
       background: #1a1a24;
       border-radius: 10px;
@@ -92,20 +85,12 @@
       margin-bottom: 8px;
       font-size: 12px;
     }
-
-    .log-entry .log-action {
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
+    .log-entry .log-action { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
     .log-entry .log-action.wake     { color: #22c55e; }
     .log-entry .log-action.shutdown { color: #ef4444; }
-
     .log-entry .log-meta { color: #555; line-height: 1.6; }
-
     .log-empty { color: #333; font-size: 13px; text-align: center; margin-top: 32px; }
 
-    /* ── Right — main panel ── */
     .main {
       flex: 1;
       display: flex;
@@ -163,6 +148,7 @@
       padding: 12px 24px; border-radius: 12px;
       font-size: 14px; opacity: 0;
       transition: opacity 0.3s; pointer-events: none;
+      white-space: nowrap;
     }
     .toast.show { opacity: 1; }
 
@@ -173,26 +159,23 @@
 </head>
 <body>
 
-  <!-- Login Screen -->
   <div id="login-screen">
     <div class="login-card">
       <h2>Pierre's Plex 🎬</h2>
       <p>Enter the site password to continue</p>
-      <input type="password" id="site-pass" placeholder="••••••" onkeydown="if(event.key==='Enter')login()" autofocus />
-      <button onclick="login()">Enter</button>
+      <input type="password" id="site-pass" placeholder="••••••"
+             onkeydown="if(event.key==='Enter') login()" autofocus />
+      <button id="login-btn" onclick="login()">Enter</button>
       <div class="error" id="login-error"></div>
     </div>
   </div>
 
-  <!-- Main App -->
   <div id="app" class="hidden">
-    <!-- Left: Log Sidebar -->
     <div class="sidebar">
       <h3>Activity Log</h3>
       <div id="log-list"><div class="log-empty">No activity yet</div></div>
     </div>
 
-    <!-- Right: Control Panel -->
     <div class="main">
       <div class="card">
         <h1><span>Pierre's</span> Plex Server</h1>
@@ -213,39 +196,8 @@
 
   <script>
     const API = 'https://plex-remote-server.onrender.com';
+    let storedPin = null;
 
-    // ── Simple site password (change this to whatever you want) ──
-    // This is a basic hash — enough to keep randos out, not a bank vault
-    const SITE_PASSWORD_HASH = hashStr('0gQv1F]C9?r1');
-
-    function hashStr(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = ((hash << 5) - hash) + str.charCodeAt(i);
-        hash |= 0;
-      }
-      return String(hash);
-    }
-
-    function login() {
-      const val = document.getElementById('site-pass').value;
-      if (hashStr(val) === SITE_PASSWORD_HASH) {
-        sessionStorage.setItem('auth', '1');
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app').classList.remove('hidden');
-        init();
-      } else {
-        document.getElementById('login-error').textContent = 'Wrong password, try again.';
-      }
-    }
-
-    // Skip login if already authed this session
-    if (sessionStorage.getItem('auth') === '1') {
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
-    }
-
-    // ── Toast ──
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -253,14 +205,53 @@
       setTimeout(() => t.classList.remove('show'), 3500);
     }
 
+    // ── Login — password checked on server ──
+    async function login() {
+      const password = document.getElementById('site-pass').value;
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('login-error');
+
+      if (!password) return;
+      btn.disabled = true;
+      btn.textContent = 'Checking...';
+      err.textContent = '';
+
+      try {
+        const res = await fetch(`${API}/auth`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        if (res.ok) {
+          sessionStorage.setItem('auth', '1');
+          document.getElementById('login-screen').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          init();
+        } else {
+          err.textContent = 'Wrong password, try again.';
+          btn.disabled = false;
+          btn.textContent = 'Enter';
+        }
+      } catch {
+        err.textContent = 'Could not reach server, try again.';
+        btn.disabled = false;
+        btn.textContent = 'Enter';
+      }
+    }
+
+    if (sessionStorage.getItem('auth') === '1') {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+    }
+
     // ── Status ──
     function setUI(status) {
       const dot  = document.getElementById('dot');
       const btnW = document.getElementById('btn-wake');
       const btnS = document.getElementById('btn-shutdown');
-
       dot.className = 'status-dot ' + status;
-      document.getElementById('label').textContent = status === 'online' ? 'Online'  : 'Offline';
+      document.getElementById('label').textContent = status === 'online' ? 'Online' : 'Offline';
       document.getElementById('sub').textContent   = status === 'online'
         ? 'Plex is ready to stream 🎬'
         : 'PC is shut down';
@@ -293,7 +284,6 @@
     function renderLogs(logs) {
       const el = document.getElementById('log-list');
       if (!logs.length) { el.innerHTML = '<div class="log-empty">No activity yet</div>'; return; }
-
       el.innerHTML = logs.map(l => {
         const d    = new Date(l.time);
         const time = d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
@@ -301,11 +291,7 @@
         return `
           <div class="log-entry">
             <div class="log-action ${l.action}">${l.action === 'wake' ? '⚡ Wake' : '🌙 Shutdown'}</div>
-            <div class="log-meta">
-              🕐 ${time}<br>
-              🌐 ${l.ip}<br>
-              📱 ${ua}
-            </div>
+            <div class="log-meta">🕐 ${time}<br>🌐 ${l.ip}<br>📱 ${ua}</div>
           </div>`;
       }).join('');
     }
@@ -314,6 +300,7 @@
     async function sendCommand(cmd) {
       const pin = prompt(`Enter PIN to ${cmd === 'wake' ? 'wake up' : 'shut down'} the PC:`);
       if (!pin) return;
+      storedPin = pin;
 
       document.getElementById('btn-wake').disabled = true;
       document.getElementById('btn-shutdown').disabled = true;
@@ -327,7 +314,7 @@
         if (res.status === 401) { showToast('❌ Wrong PIN'); }
         else {
           showToast(data.message || `${cmd} sent!`);
-          fetchLogs(pin); // refresh logs after action
+          fetchLogs(pin);
         }
       } catch {
         showToast('❌ Could not reach server');
