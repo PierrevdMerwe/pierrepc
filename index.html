@@ -14,6 +14,7 @@
       min-height: 100vh;
     }
 
+    /* ── Login ── */
     #login-screen {
       position: fixed; inset: 0;
       background: #0f0f13;
@@ -31,106 +32,96 @@
     }
     .login-card h2 { margin-bottom: 8px; }
     .login-card p  { color: #666; font-size: 13px; margin-bottom: 28px; }
-
     .login-card input {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px solid #333;
-      background: #111;
-      color: #fff;
-      font-size: 16px;
-      text-align: center;
-      letter-spacing: 4px;
-      margin-bottom: 12px;
+      width: 100%; padding: 14px;
+      border-radius: 12px; border: 1px solid #333;
+      background: #111; color: #fff;
+      font-size: 16px; text-align: center;
+      letter-spacing: 4px; margin-bottom: 12px;
     }
     .login-card input:focus { outline: none; border-color: #555; }
-
     .login-card button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #e5a00d;
-      color: #000;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
+      width: 100%; padding: 14px; border: none;
+      border-radius: 12px; background: #e5a00d;
+      color: #000; font-size: 16px; font-weight: 700; cursor: pointer;
     }
     .login-card button:disabled { opacity: 0.5; cursor: not-allowed; }
     .login-card .error { color: #ef4444; font-size: 13px; margin-top: 10px; min-height: 18px; }
 
+    /* ── Layout ── */
     #app { display: flex; min-height: 100vh; }
     #app.hidden { display: none; }
 
+    /* ── Sidebar ── */
     .sidebar {
-      width: 300px;
-      background: #12121a;
+      width: 300px; background: #12121a;
       border-right: 1px solid #1e1e2e;
-      padding: 24px 16px;
-      overflow-y: auto;
-      flex-shrink: 0;
+      padding: 24px 16px; overflow-y: auto;
+      flex-shrink: 0; display: flex; flex-direction: column; gap: 8px;
     }
-    .sidebar h3 {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #444;
-      margin-bottom: 16px;
+    .sidebar-title {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 1.5px; color: #444; margin-bottom: 4px;
     }
+
     .log-entry {
-      background: #1a1a24;
-      border-radius: 10px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      font-size: 12px;
+      background: #1a1a24; border-radius: 10px;
+      padding: 10px 12px; font-size: 12px;
+      border-left: 3px solid transparent;
     }
-    .log-entry .log-action { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
-    .log-entry .log-action.wake     { color: #22c55e; }
-    .log-entry .log-action.shutdown { color: #ef4444; }
-    .log-entry .log-meta { color: #555; line-height: 1.6; }
+    .log-entry.type-wake       { border-color: #22c55e; }
+    .log-entry.type-shutdown   { border-color: #ef4444; }
+    .log-entry.type-status_check { border-color: #333; }
+    .log-entry.type-error      { border-color: #f59e0b; }
+
+    .log-entry .log-top {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 4px;
+    }
+    .log-action { font-weight: 700; font-size: 12px; }
+    .log-action.wake      { color: #22c55e; }
+    .log-action.shutdown  { color: #ef4444; }
+    .log-action.online    { color: #22c55e; }
+    .log-action.offline   { color: #888; }
+    .log-action.error     { color: #f59e0b; }
+    .log-time { font-size: 10px; color: #444; }
+    .log-detail { font-size: 11px; color: #555; line-height: 1.6; margin-top: 2px; }
+    .log-detail.highlight { color: #888; }
+
     .log-empty { color: #333; font-size: 13px; text-align: center; margin-top: 32px; }
 
+    /* ── Main ── */
     .main {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      flex: 1; display: flex;
+      align-items: center; justify-content: center; padding: 24px;
     }
 
     .card {
-      background: #1a1a24;
-      border-radius: 24px;
-      padding: 48px 40px;
-      text-align: center;
-      width: 340px;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      background: #1a1a24; border-radius: 24px;
+      padding: 48px 40px; text-align: center;
+      width: 340px; box-shadow: 0 24px 60px rgba(0,0,0,0.5);
     }
 
     h1 { font-size: 22px; color: #aaa; font-weight: 400; margin-bottom: 36px; }
     h1 span { color: #fff; font-weight: 700; }
 
     .status-dot {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 16px;
-      transition: background 0.5s;
-      background: #333;
+      width: 80px; height: 80px; border-radius: 50%;
+      margin: 0 auto 16px; transition: background 0.5s; background: #333;
     }
     .status-dot.online  { background: #22c55e; box-shadow: 0 0 32px #22c55e88; }
     .status-dot.offline { background: #ef4444; box-shadow: 0 0 32px #ef444488; }
-    .status-dot.loading { background: #f59e0b; box-shadow: 0 0 32px #f59e0b88; animation: pulse 1s infinite; }
+    .status-dot.checking { background: #f59e0b; box-shadow: 0 0 32px #f59e0b88; animation: pulse 1s infinite; }
+    .status-dot.error   { background: #6b7280; box-shadow: 0 0 32px #6b728088; }
 
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
-    .status-label { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-    .status-sub   { font-size: 13px; color: #666; margin-bottom: 40px; }
+    .status-label { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .status-reason { font-size: 12px; color: #555; margin-bottom: 32px; min-height: 18px; }
 
     button {
-      width: 100%; padding: 16px;
-      border: none; border-radius: 14px;
-      font-size: 16px; font-weight: 600;
+      width: 100%; padding: 16px; border: none;
+      border-radius: 14px; font-size: 16px; font-weight: 600;
       cursor: pointer; transition: all 0.2s; margin-top: 10px;
     }
     button:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -139,7 +130,7 @@
     .btn-shutdown { background: #ef4444; color: #fff; }
     .btn-shutdown:hover:not(:disabled) { background: #dc2626; }
 
-    .refresh { margin-top: 24px; font-size: 12px; color: #444; }
+    .refresh { margin-top: 24px; font-size: 11px; color: #333; }
 
     .toast {
       position: fixed; bottom: 24px; left: 50%;
@@ -147,14 +138,11 @@
       background: #333; color: #fff;
       padding: 12px 24px; border-radius: 12px;
       font-size: 14px; opacity: 0;
-      transition: opacity 0.3s; pointer-events: none;
-      white-space: nowrap;
+      transition: opacity 0.3s; pointer-events: none; white-space: nowrap;
     }
     .toast.show { opacity: 1; }
 
-    @media (max-width: 600px) {
-      .sidebar { display: none; }
-    }
+    @media (max-width: 640px) { .sidebar { display: none; } }
   </style>
 </head>
 <body>
@@ -172,7 +160,7 @@
 
   <div id="app" class="hidden">
     <div class="sidebar">
-      <h3>Activity Log</h3>
+      <div class="sidebar-title">Activity &amp; Status Log</div>
       <div id="log-list"><div class="log-empty">No activity yet</div></div>
     </div>
 
@@ -180,9 +168,9 @@
       <div class="card">
         <h1><span>Pierre's</span> Plex Server</h1>
 
-        <div class="status-dot loading" id="dot"></div>
-        <div class="status-label" id="label">Checking...</div>
-        <div class="status-sub"   id="sub">Hang on a sec</div>
+        <div class="status-dot checking" id="dot"></div>
+        <div class="status-label"  id="label">Checking...</div>
+        <div class="status-reason" id="reason">Contacting Render backend</div>
 
         <button class="btn-wake"     id="btn-wake"     disabled onclick="sendCommand('wake')">⚡ Wake Up PC</button>
         <button class="btn-shutdown" id="btn-shutdown" disabled onclick="sendCommand('shutdown')">🌙 Shut Down PC</button>
@@ -196,8 +184,83 @@
 
   <script>
     const API = 'https://plex-remote-server.onrender.com';
-    let storedPin = null;
+    const clientLogs = [];
 
+    // ── Reason messages — human readable ──
+    const REASONS = {
+      plex_responding:           '🎬 Plex is responding normally',
+      plex_bad_response:         '⚠️ Plex returned an unexpected response',
+      timeout:                   '⏱ PC did not respond in time — may be booting',
+      connection_refused:        '🔌 PC is reachable but Plex port is closed',
+      dns_failed:                '🌐 Could not resolve your home domain (DuckDNS issue?)',
+      unreachable:               '📡 PC is not reachable on the network',
+      shutdown_server_unreachable: '⚠️ Shutdown server did not respond',
+    };
+
+    function humanReason(reason, code) {
+      if (reason && REASONS[reason]) return REASONS[reason];
+      if (code) return `Unexpected response (HTTP ${code})`;
+      return reason || 'Unknown';
+    }
+
+    // ── Client-side log (status checks + actions) ──
+    function pushLog(entry) {
+      clientLogs.unshift(entry);
+      if (clientLogs.length > 100) clientLogs.pop();
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const el = document.getElementById('log-list');
+      if (!clientLogs.length) { el.innerHTML = '<div class="log-empty">No activity yet</div>'; return; }
+
+      el.innerHTML = clientLogs.map(l => {
+        const time = new Date(l.time).toLocaleTimeString();
+
+        if (l.type === 'status_check') {
+          const cls   = l.status === 'online' ? 'online' : l.status === 'error' ? 'error' : 'offline';
+          const icon  = l.status === 'online' ? '🟢' : l.status === 'error' ? '🟡' : '🔴';
+          const label = l.status === 'online' ? 'Online' : l.status === 'error' ? 'Backend error' : 'Offline';
+          return `
+            <div class="log-entry type-status_check">
+              <div class="log-top">
+                <span class="log-action ${cls}">${icon} ${label}</span>
+                <span class="log-time">${time}</span>
+              </div>
+              ${l.detail ? `<div class="log-detail">${l.detail}</div>` : ''}
+            </div>`;
+        }
+
+        if (l.type === 'wake' || l.type === 'shutdown') {
+          const icon  = l.type === 'wake' ? '⚡' : '🌙';
+          const label = l.type === 'wake' ? 'Wake sent' : 'Shutdown sent';
+          const cls   = l.type === 'wake' ? 'wake' : 'shutdown';
+          return `
+            <div class="log-entry type-${l.type}">
+              <div class="log-top">
+                <span class="log-action ${cls}">${icon} ${label}</span>
+                <span class="log-time">${time}</span>
+              </div>
+              ${l.detail ? `<div class="log-detail highlight">${l.detail}</div>` : ''}
+            </div>`;
+        }
+
+        if (l.type === 'error') {
+          return `
+            <div class="log-entry type-error">
+              <div class="log-top">
+                <span class="log-action error">⚠️ Error</span>
+                <span class="log-time">${time}</span>
+              </div>
+              <div class="log-detail">${l.detail}</div>
+            </div>`;
+        }
+
+        return '';
+      }).join('');
+    }
+
+    // ── Toast ──
     function showToast(msg) {
       const t = document.getElementById('toast');
       t.textContent = msg;
@@ -205,13 +268,86 @@
       setTimeout(() => t.classList.remove('show'), 3500);
     }
 
-    // ── Login — password checked on server ──
+    // ── UI state ──
+    function setUI(status, reasonText) {
+      const dot  = document.getElementById('dot');
+      const btnW = document.getElementById('btn-wake');
+      const btnS = document.getElementById('btn-shutdown');
+
+      dot.className = 'status-dot ' + status;
+      document.getElementById('reason').textContent = reasonText || '';
+
+      if (status === 'online') {
+        document.getElementById('label').textContent = 'Online';
+        btnW.disabled = true;
+        btnS.disabled = false;
+      } else if (status === 'offline') {
+        document.getElementById('label').textContent = 'Offline';
+        btnW.disabled = false;
+        btnS.disabled = true;
+      } else if (status === 'checking') {
+        document.getElementById('label').textContent = 'Checking...';
+        btnW.disabled = true;
+        btnS.disabled = true;
+      } else if (status === 'error') {
+        document.getElementById('label').textContent = 'Unknown';
+        btnW.disabled = false;
+        btnS.disabled = true;
+      }
+    }
+
+    // ── Status check ──
+    async function checkStatus(silent = false) {
+      if (!silent) {
+        setUI('checking', 'Contacting Render backend...');
+        document.getElementById('refresh-label').textContent = 'Refreshing...';
+      }
+
+      const start = Date.now();
+
+      try {
+        const controller = new AbortController();
+        const renderTimeout = setTimeout(() => controller.abort(), 12000);
+
+        const res = await fetch(`${API}/status`, { signal: controller.signal });
+        clearTimeout(renderTimeout);
+
+        const data = await res.json();
+        const ms   = Date.now() - start;
+        const reasonText = humanReason(data.reason, data.code);
+
+        if (data.status === 'online') {
+          setUI('online', reasonText);
+          pushLog({ type: 'status_check', status: 'online', detail: reasonText, time: new Date() });
+        } else {
+          setUI('offline', reasonText);
+          pushLog({ type: 'status_check', status: 'offline', detail: reasonText, time: new Date() });
+        }
+
+        const now = new Date().toLocaleTimeString();
+        document.getElementById('refresh-label').textContent = `Last checked: ${now} (${ms}ms) · refreshes every 30s`;
+
+      } catch (err) {
+        const isRenderTimeout = err.name === 'AbortError';
+        const detail = isRenderTimeout
+          ? 'Render backend timed out — it may be waking from sleep (can take 30s)'
+          : `Could not reach backend: ${err.message}`;
+
+        setUI('error', isRenderTimeout ? '⏳ Render is waking up, please wait...' : '❌ Cannot reach backend');
+        pushLog({ type: 'error', detail, time: new Date() });
+
+        document.getElementById('refresh-label').textContent = 'Retrying in 10s...';
+        setTimeout(() => checkStatus(true), 10000);
+      }
+    }
+
+    // ── Login ──
     async function login() {
       const password = document.getElementById('site-pass').value;
       const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
-
       if (!password) return;
+
       btn.disabled = true;
       btn.textContent = 'Checking...';
       err.textContent = '';
@@ -234,76 +370,22 @@
           btn.textContent = 'Enter';
         }
       } catch {
-        err.textContent = 'Could not reach server, try again.';
+        err.textContent = 'Could not reach server — is Render running?';
         btn.disabled = false;
         btn.textContent = 'Enter';
       }
-    }
-
-    if (sessionStorage.getItem('auth') === '1') {
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('app').classList.remove('hidden');
-    }
-
-    // ── Status ──
-    function setUI(status) {
-      const dot  = document.getElementById('dot');
-      const btnW = document.getElementById('btn-wake');
-      const btnS = document.getElementById('btn-shutdown');
-      dot.className = 'status-dot ' + status;
-      document.getElementById('label').textContent = status === 'online' ? 'Online' : 'Offline';
-      document.getElementById('sub').textContent   = status === 'online'
-        ? 'Plex is ready to stream 🎬'
-        : 'PC is shut down';
-      btnW.disabled = status === 'online';
-      btnS.disabled = status !== 'online';
-    }
-
-    async function checkStatus() {
-      document.getElementById('refresh-label').textContent = 'Refreshing...';
-      try {
-        const res  = await fetch(`${API}/status`);
-        const data = await res.json();
-        setUI(data.status);
-      } catch {
-        setUI('offline');
-      }
-      const now = new Date().toLocaleTimeString();
-      document.getElementById('refresh-label').textContent = `Last checked: ${now} · auto-refreshes every 30s`;
-    }
-
-    // ── Logs ──
-    async function fetchLogs(pin) {
-      try {
-        const res  = await fetch(`${API}/logs`, { headers: { 'x-pin': pin } });
-        const data = await res.json();
-        renderLogs(data.logs || []);
-      } catch {}
-    }
-
-    function renderLogs(logs) {
-      const el = document.getElementById('log-list');
-      if (!logs.length) { el.innerHTML = '<div class="log-empty">No activity yet</div>'; return; }
-      el.innerHTML = logs.map(l => {
-        const d    = new Date(l.time);
-        const time = d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
-        const ua   = l.userAgent.substring(0, 60) + (l.userAgent.length > 60 ? '…' : '');
-        return `
-          <div class="log-entry">
-            <div class="log-action ${l.action}">${l.action === 'wake' ? '⚡ Wake' : '🌙 Shutdown'}</div>
-            <div class="log-meta">🕐 ${time}<br>🌐 ${l.ip}<br>📱 ${ua}</div>
-          </div>`;
-      }).join('');
     }
 
     // ── Commands ──
     async function sendCommand(cmd) {
       const pin = prompt(`Enter PIN to ${cmd === 'wake' ? 'wake up' : 'shut down'} the PC:`);
       if (!pin) return;
-      storedPin = pin;
 
       document.getElementById('btn-wake').disabled = true;
       document.getElementById('btn-shutdown').disabled = true;
+
+      const label = cmd === 'wake' ? 'Wake' : 'Shutdown';
+      pushLog({ type: cmd, detail: 'Sending command...', time: new Date() });
 
       try {
         const res  = await fetch(`${API}/${cmd}`, {
@@ -311,24 +393,40 @@
           headers: { 'Content-Type': 'application/json', 'x-pin': pin }
         });
         const data = await res.json();
-        if (res.status === 401) { showToast('❌ Wrong PIN'); }
-        else {
-          showToast(data.message || `${cmd} sent!`);
-          fetchLogs(pin);
+
+        if (res.status === 401) {
+          showToast('❌ Wrong PIN');
+          pushLog({ type: 'error', detail: `${label} rejected — wrong PIN`, time: new Date() });
+        } else if (!res.ok) {
+          const reason = data.reason ? humanReason(data.reason) : data.error;
+          showToast(`❌ ${reason}`);
+          pushLog({ type: 'error', detail: `${label} failed: ${reason}`, time: new Date() });
+        } else {
+          showToast(data.message || `${label} sent!`);
+          // Update the last log entry with success detail
+          if (clientLogs[0]?.type === cmd) {
+            clientLogs[0].detail = data.message || `${label} command sent successfully`;
+            renderLogs();
+          }
         }
-      } catch {
+      } catch (err) {
         showToast('❌ Could not reach server');
+        pushLog({ type: 'error', detail: `${label} failed: could not reach backend`, time: new Date() });
       }
 
-      setTimeout(checkStatus, 5000);
+      setTimeout(() => checkStatus(true), 5000);
     }
 
     function init() {
       checkStatus();
-      setInterval(checkStatus, 30000);
+      setInterval(() => checkStatus(true), 30000);
     }
 
-    if (sessionStorage.getItem('auth') === '1') init();
+    if (sessionStorage.getItem('auth') === '1') {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      init();
+    }
   </script>
 </body>
 </html>
